@@ -1,26 +1,37 @@
 import Vue from 'vue'
 import VueRouter from 'vue-router'
-import Home from '../views/Home.vue'
 
 Vue.use(VueRouter)
+const originalPush = VueRouter.prototype.push
+VueRouter.prototype.push = function push(location) {
+   return originalPush.call(this, location).catch(err => err)
+}
 
-  const routes = [
+import OutPatientLogin from 'views/OutPatientLogin.vue'
+import OutPatientIndex from 'views/OutPatientIndex.vue'
+import OutPatientRegister from 'views/OutPatientRegister.vue'
+
+const routes = [
   {
-    path: '/',
-    name: 'Home',
-    component: Home
+    path:'/OutPatient',
+    component:OutPatientLogin
   },
   {
-    path: '/about',
-    name: 'About',
-    // route level code-splitting
-    // this generates a separate chunk (about.[hash].js) for this route
-    // which is lazy-loaded when the route is visited.
-    component: () => import(/* webpackChunkName: "about" */ '../views/About.vue')
+    path:'/OutPatient/login',
+    component:OutPatientLogin
+  },{
+    path:'/OutPatient/index',
+    component:OutPatientIndex
+  },
+  {
+    path:'/OutPatient/register',
+    component:OutPatientRegister
   }
 ]
 
 const router = new VueRouter({
+  //url取消hash
+  mode:"history",
   routes
 })
 
