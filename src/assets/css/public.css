@@ -1,0 +1,10 @@
+html,body{
+    margin:0 !important;
+    padding: 0 !important;
+    width: 100% !important;
+    height:100% !important;
+}
+
+.whiteItem .el-form-item__label,.el-radio__label{
+    color:#fff !important;
+}
