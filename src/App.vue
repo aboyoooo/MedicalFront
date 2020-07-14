@@ -1,17 +1,13 @@
 <template>
   <div id="app">
-    <router-view/>
+    <router-view :key="$route.path"></router-view>
   </div>
 </template>
 
 <script>
 
 export default {
-  name: 'app',
-  created:function(){
-    //跳转到指定路径
-    this.$router.push({'path':'/OutPatient/login'});
-  }
+  name: 'app'
 }
 </script>
 
