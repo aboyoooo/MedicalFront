@@ -42,6 +42,7 @@
 </template>
 
 <script>
+import Bus from '../assets/js/bus'
 export default {
     name:"OutPatientLogin",
     data() {
@@ -56,6 +57,10 @@ export default {
             ]
         }
       }
+    },
+    beforeDestroy(){
+        //传给首页用户id
+        Bus.$emit('patientId',this.form.cardNumber);
     },
     methods:{
         login:function(formName){
