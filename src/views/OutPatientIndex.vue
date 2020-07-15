@@ -213,7 +213,7 @@ export default {
         dataGet:function(){
             var that = this;
             //构造请求url
-            var url = "http://localhost:8003/api/patients/"+that.patientID;
+            var url = "http://localhost:8003/out/api/patients/"+that.patientID;
             that.$axios.get(url,{
                 headers:{
                     'content-type':'application/json',

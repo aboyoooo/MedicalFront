@@ -292,7 +292,7 @@ export default {
                 "delFlag":"0"
             };
             //构造url
-            var url = 'http://localhost:8003/api/patients';
+            var url = 'http://localhost:8003/out/api/patients';
             this.$axios.post(url,JSON.stringify(data),{
               headers:{
                 'content-type':'application/json'

@@ -68,7 +68,7 @@ export default {
                 if(valid){
                     //验证通过
                     //构造请求的url
-                    var url = 'http://localhost:8003/api/tokens/'+this.form.cardNumber;
+                    var url = 'http://localhost:8003/out/api/tokens/'+this.form.cardNumber;
                     //发送登录请求
                     this.$axios.get(url).then((res)=>{
                         var res = res.data;
