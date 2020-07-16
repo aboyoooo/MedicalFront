@@ -2,7 +2,7 @@
     <div class="header">
         <el-row>
             <el-col :span="6" class="title">
-                <span>门诊挂号系统</span>
+                <span>{{title}}</span>
             </el-col>
             <el-col :span="18" class="rigth-status">
                 <el-dropdown class="dropdownList">
@@ -23,7 +23,15 @@
 
 <script>
 export default {
-    name:"heads"
+    name:"heads",
+    data(){
+        return {
+            
+        }
+    },
+    props:[
+        'title'
+    ]
 }
 </script>
 
