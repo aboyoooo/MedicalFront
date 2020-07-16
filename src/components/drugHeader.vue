@@ -2,8 +2,8 @@
     <div class="header">
         <el-row>
             <el-col :span="6" class="title">
-                <span>门诊挂号系统</span>
-<!--                    <span>药房发药系统</span>-->
+                <!--                <span>门诊挂号系统</span>-->
+                <span>药房发药系统</span>
             </el-col>
             <el-col :span="18" class="rigth-status">
                 <el-dropdown class="dropdownList">
@@ -23,9 +23,9 @@
 </template>
 
 <script>
-export default {
-    name:"heads"
-}
+    export default {
+        name:"heads"
+    }
 </script>
 
 <style scoped>

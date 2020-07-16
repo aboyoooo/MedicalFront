@@ -132,9 +132,11 @@
                                         <el-form-item label="手续费：">
                                             <el-input v-model="feeInfoForm.proceduresFee"></el-input>
                                         </el-form-item>
+
                                     </el-col>
                                 </el-row>
                             </el-form>
+
                         </el-col>
                     </el-row>
                 </el-col>
