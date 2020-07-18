@@ -96,21 +96,21 @@
 
 
                                                     <el-form-item
-                                                            v-for=" (item) in props.row.drugName"
+                                                            v-for=" (item) in props.row.drugNames"
                                                             v-bind:item="item"
                                                             v-bind:index="index"
-                                                            v-bind:key="item.drugid"
+                                                            v-bind:key="item.index"
 
                                                             label="药品" >
-                                                        <span>{{ item.drugname }}</span>
+                                                        <span>{{ item.drugName }}</span>
                                                         <span>{{ item.payCount}}</span>
                                                     </el-form-item>
-                                                    <el-form-item
+<!--                                                    <el-form-item-->
 
 
-                                                            label="药品数量">
-                                                        <span>{{ props.row.payCount }}</span>
-                                                    </el-form-item>
+<!--                                                            label="药品数量">-->
+<!--                                                        <span>{{ props.row.payCount }}</span>-->
+<!--                                                    </el-form-item>-->
 
 
                                                     <el-form-item label="收费状态">
@@ -118,7 +118,7 @@
                                                     </el-form-item>
                                                     <el-form-item label=" ">
                                                         <span>{{ props.row.desc }}</span>
-                                                        <el-button type="success" round>核销药品</el-button>
+                                                        <el-button type="success" round @click=sendDrug(props.row)>核销药品</el-button>
                                                     </el-form-item>
                                                 </el-form>
                                             </template>
@@ -160,7 +160,7 @@
         data() {
             return {
                 token: '',
-                //patientID:'',
+                patientID:'',
                 baseInfoForm: {
                     name: '',
                     age: '',
@@ -168,7 +168,7 @@
                     patientId: ''
                 },
                 //    处方单表用--开始   固定数据
-                tableData: [{
+                // tableData: [{
                     //name
                     //age
                     //sex
@@ -177,47 +177,33 @@
                     //drug[{drugId:"01",drugName:"",drugCount="*"}]
                     //payStatus: 1:已付款 2：未付款 3：已发货 0 暂存
                     //传过来是一个 数组 按medicalListId 划分的
-
-                    recordTime:"1",
-                    medicalListId:"2",
-                    payStatus:"3",
-                    recordId2:" ",
-                    drugName:[{
-                        drugid:"01",
-                        drugname:"名字1",
-                        payCount:"*2"
-                    },{
-                        drugid: "02",
-                        drugname: "名字2",
-                        payCount:"*3"
-
-                    }],
-                    // payCount:"6"
-                },
-                    {
-                        recordTime:"1",
-                        medicalListId:"2",
-                        payStatus:"3",
-                        recordId2:" ",
-                        drugName:"5",
-                        payCount:"6"
-                    },
-                    {}]
-
-                //动态数据
-                // tableData:[{
-                //     recordTime:"1",
-                //     medicalListId:"2",
-                //     payStatus:"3",
-                //     recordId2:" ",
-                //     drugName:"5",
-                //     payCount:"6"
+                    // recordTime:"1",
+                    // medicalListId:"2",
+                    // payStatus:"3",
+                    // recordId2:" ",
+                    // drugName:[{
+                    //     drugid:"01",
+                    //     drugname:"名字1",
+                    //     payCount:"*2"
+                    // },{
+                    //     drugid: "02",
+                //         drugname: "名字2",
+                //         payCount:"*3"
                 //
+                //     }],
+                //     // payCount:"6"
                 // },
-                //     {},
-                //     {}
-                // ]
-
+                //     {
+                //         recordTime:"1",
+                //         medicalListId:"2",
+                //         payStatus:"3",
+                //         recordId2:" ",
+                //         drugName:"5",
+                //         payCount:"6"
+                //     },
+                //     {}]
+                //动态数据
+                tableData:[]
                 //    处方单表用--结束
             }
         },
@@ -286,18 +272,19 @@
             dataQuery: function () {
 
                 var that = this;
+                // console.log(that.tableData);
                 //构造请求url
                 var url = "http://localhost:8003/out/api/patients/" + that.baseInfoForm.patientId;
-                console.log("-------------" + that.baseInfoForm.patientId)
+                // console.log("-------------" + that.baseInfoForm.patientId)
                 that.$axios.get(url, {
                     headers: {
                         'content-type': 'application/json',
                         'access_token': that.token
                     }
                 }).then((res) => {
-                    console.log(res);
+                    // console.log(res);
                     res = res.data;
-
+                    // console.log(that.tableData);
                     this.baseInfoForm.name = " ";
                     this.baseInfoForm.age = " ";
                     this.baseInfoForm.sex = " ";
@@ -327,43 +314,50 @@
                 // console.log("----------------"+ that.baseInfoForm.patientId)
                 //
                 // url = "http://localhost:8003/drg/api/medicallists/" + that.baseInfoForm.patientId;
+                url = "http://localhost:8003/drg/api/DrugInfos/" + that.baseInfoForm.patientId;
+                // console.log(url);
                 //
-                // that.$axios.get(url, {
-                //     headers: {
-                //         'content-type': 'application/json',
-                //         'access_token': that.token
-                //     }
-                // }).then((res) => {
-                //     console.log("--------------------");
-                //     console.log("--------------------");
-                //     console.log("--------------------");
-                //     console.log("--------------------");
-                //     console.log(res);
-                //     res = res.data;
-                //
-                //     if (res.code == 20000 && res.flag == true) {
-                //         //数据渲染
-                //         var data = res.data;
-                //
-                //         that.tableData = data;
-                //         // this.tableData.recordDate = data.recordDate;
-                //         // this.tableData.medicalListId = data.medicalListId;
-                //         // this.tableData.payStatus = data.payStatus;
-                //         // this.tableData.id = data.recordDate;
-                //         // this.tableData.name = data.medicalListId;
-                //         // this.tableData.desc = data.payStatus;
-                //         /*        this.$message({
-                //                     message: '查询成功',
-                //                     type: 'success'
-                //                 });*/
-                //     }
-                //     else {
-                //         this.$message({
-                //             message: '查询失败',
-                //             type: 'error'
-                //         });
-                //     }
-                // });
+                that.$axios.get(url, {
+                    headers: {
+                        'content-type': 'application/json',
+                        'access_token': that.token
+                    }
+                }).then((res) => {
+                    // console.log("--------------------");
+                    // console.log("--------------------");
+                    // console.log("--------------------");
+                    // console.log("--------------------");
+                    console.log(res);
+                    res = res.data;
+
+                    if (res.code == 20000 && res.flag == true) {
+                        //数据渲染
+                        // var data = res.data;
+
+                        // console.log(that.tableData);
+                        that.tableData = res.data.tableData;
+                        // console.log(that.data);
+                        // this.tableData = data;
+                        // console.log(this.tableData);
+                        // console.log(that.tableData);
+                        // this.tableData.recordTime = data.recordTime;
+                        // this.tableData.medicalListId = data.medicalListId;
+                        // this.tableData.payStatus = data.payStatus;
+                        // this.tableData.id = data.recordDate;
+                        // this.tableData.name = data.medicalListId;
+                        // this.tableData.desc = data.payStatus;
+                        //         this.$message({
+                        //             message: '查询成功',
+                        //             type: 'success'
+                        //         });
+                    }
+                    else {
+                        this.$message({
+                            message: '查询失败',
+                            type: 'error'
+                        });
+                    }
+                });
                 //
                 //
                 // console.log("----------------"+ that.baseInfoForm.patientId)
@@ -410,7 +404,59 @@
 
 
 
-            },},}
+            },
+
+            sendDrug: function (param){
+                // console.log(param);
+                var that = this;
+                // 构造请求url
+                var url = "http://localhost:8003/drg/api/records/updateStatus/" + param.medicalListId;
+                // console.log("-------------" + that.baseInfoForm.patientId)
+                that.$axios.put(url, {},{
+                    headers: {
+                        'content-type': 'application/json',
+                        'access_token': that.token
+                    }
+                }).then((res) => {
+                    // console.log(res);
+                    res = res.data;
+                    // console.log(that.tableData);
+                    // this.baseInfoForm.name = " ";
+                    // this.baseInfoForm.age = " ";
+                    // this.baseInfoForm.sex = " ";
+                    /*                  this.tableData.recordDate = " 1";
+                                      this.tableData.medicalListId = " 2";
+                                      this.tableData.payStatus = "3 ";*/
+
+                    if (res.code == 20000 && res.flag == true) {
+                        //数据渲染
+                        var data = res.data;
+                        // this.baseInfoForm.name = data.patientName;
+                        // this.baseInfoForm.age = data.age;
+                        // this.baseInfoForm.sex = data.sex;
+                        this.$message({
+                            message: '发货成功',
+                            type: 'success'
+                        });
+                    } else {
+                        this.$message({
+                            message: '发货失败',
+                            type: 'error'
+                        });
+                    }
+
+                })
+
+            }
+
+
+
+
+
+        },}
+
+
+
 
 
 
