@@ -79,6 +79,7 @@
                                     </el-table-column>
                                     <el-table-column label="操作">
                                     <template slot-scope="scope">
+                                        <el-button size="mini" @click="handleEdit(scope.$index, scope.row)">编辑</el-button>
                                         <el-button size="mini" type="danger" @click="handleDelete(scope.$index, scope.row)">删除</el-button>
                                     </template>
                                     </el-table-column>
@@ -86,12 +87,43 @@
                             </el-col>
                       </el-row>
                 </el-row>
+                <el-dialog title="提示" :visible.sync="dialogVisible" width="30%">
+                    <el-row>
+                        <el-col :span="24">
+                            <el-form :model="editForm" :ref="editForm" label-width="120px">
+                                <el-row>
+                                    <el-col :span="23">
+                                        <el-form-item prop="code" label="药品编号：">
+                                            <el-input v-model="editForm.code" :disabled="true"></el-input>
+                                        </el-form-item>
+                                    </el-col>
+                                </el-row>
+                                <el-col :span="23">
+                                    <el-form-item prop="name" label="药品名称：">
+                                        <el-input v-model="editForm.name" :disabled="true"></el-input>
+                                    </el-form-item>
+                                </el-col>
+                                <el-col :span="23">
+                                    <el-form-item prop="nums" label="药品数量：">
+                                        <el-input v-model="editForm.nums"></el-input>
+                                    </el-form-item>
+                                </el-col>
+                                
+                            </el-form>
+                        </el-col>
+                    </el-row>
+                    <span slot="footer" class="dialog-footer">
+                        <el-button @click="dialogVisible = false">取 消</el-button>
+                        <el-button type="primary" @click="editSub()">确 定</el-button>
+                    </span>
+                </el-dialog>
             </el-col>
         </el-row>
     </div>
 </template>
 
 <script>
+import Bus from '../assets/js/bus'
 export default {
     name:"charge",
     data(){
@@ -102,7 +134,16 @@ export default {
             tableData:[],
             drugData:[],
             token:'',
-            loading:false
+            loading:false,
+            mListId:'',
+            dialogVisible:false,
+            editForm:{
+                code:'',
+                name:'',
+                nums:'',
+                index:'',
+                row:''
+            }
         }
     },
     mounted(){
@@ -117,17 +158,50 @@ export default {
          }
     },
     methods:{
+      handleEdit(index, row) {
+          //编辑的处理方法
+          var that = this;
+          that.dialogVisible = true;
+          //数据初始化
+          that.editForm.code = '';
+          that.editForm.name = '';
+          that.editForm.nums = '';
+          that.editForm.index = '';
+          that.editForm.row = '';
+          //赋值数据
+          that.editForm.code = row.code;
+          that.editForm.name = row.name;
+          that.editForm.nums = row.nums;
+          that.editForm.index = index;
+          that.editForm.row = row;
+      },
       handleDelete(index, row) {
-        console.log(index, row);
+        var that = this;
+        //删除table中的数据
+        that.drugData.splice(index,1);
+      },
+      editSub(){
+          var that = this;
+          //弹窗不可见
+          that.dialogVisible = false;
+          //数据更新
+          that.drugData[that.editForm.index].nums = that.editForm.nums;
+          that.drugData[that.editForm.index].amount = 
+          Number.parseInt(that.editForm.nums)*Number.parseInt(that.drugData[that.editForm.index].unitPrice);
       },
       searchPatient(){
           var that = this;
           that.loading = true;
+          //清空原来的数据
+          that.tableData = [];
+          that.drugData = [];
+          that.mListId = '';
           if(that.searchForm.id==null || that.searchForm.id==undefined || that.searchForm.id==''){
               that.$message({
                 message: '就诊卡号不允许为空',
                 type: 'warning'
               });
+              that.loading = false;
           }else{
             //构造请求的url 查询患者信息
             var url = "http://localhost:8003/out/api/PatientDetInfos/"+that.searchForm.id
@@ -152,6 +226,8 @@ export default {
                         response = response.data;
                         if(response.code==20000 && response.flag==true){
                             var data = response.data;
+                            //将获取的处方单号存储为全局变量
+                            that.mListId = data[0].mlistId;
                             for(var i=0;i<data.length;i++){
                                 that.drugData.push(data[i]);
                             }
@@ -160,7 +236,19 @@ export default {
                                 message: '查询成功',
                                 type: 'success'
                             });
+                        }else{
+                            that.loading = false;
+                            this.$message({
+                                message: '无开药记录',
+                                type: 'error'
+                            });
                         }
+                    });
+                }else{
+                    that.loading = false;
+                    this.$message({
+                        message: '就诊卡号有误',
+                        type: 'error'
                     });
                 }
             });
