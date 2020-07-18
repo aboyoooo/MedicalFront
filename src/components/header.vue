@@ -11,6 +11,7 @@
                         <i class="el-icon-arrow-down el-icon--right"></i>
                     </span>
                     <el-dropdown-menu slot="dropdown">
+                        <el-dropdown-item command="quitNumber">退号</el-dropdown-item>
                         <el-dropdown-item command="quit">退出</el-dropdown-item>
                     </el-dropdown-menu>
                 </el-dropdown>
@@ -33,12 +34,16 @@ export default {
     methods:{
         quit(command){
             var that = this;
-            //清除cookie
-            that.$cookie.delete('token');
-            that.$cookie.delete('id');
-            //跳转到登录
-            var service = that.$route.path.split('/')[1];
-            that.$router.push({'path':'/'+service+'/login'});
+            if(command=="quit"){
+                //清除cookie
+                that.$cookie.delete('token');
+                that.$cookie.delete('id');
+                //跳转到登录
+                var service = that.$route.path.split('/')[1];
+                that.$router.push({'path':'/'+service+'/login'});
+            }else if(command=="quitNumber"){
+                that.$emit("quitNumber",true);
+            }
         }
     }
 }
