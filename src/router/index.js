@@ -15,12 +15,15 @@ import ChargeIndex from 'views/ChargeIndex.vue'
 import charge from 'components/charge.vue'
 import queryCharge from 'components/queryCharge.vue'
 import returnCharge from 'components/returnCharge.vue'
+import DrugLogin from "../views/DrugLogin";
+import DrugIndex from "../views/DrugIndex";
 
 const routes = [
   {
     path:'/',
     name:'home',
-    redirect:'/OutPatient/login'
+    // redirect:'/OutPatient/login'
+    redirect:'/Drug/login'
   },
   {
     path:'/OutPatient/register',
@@ -57,7 +60,17 @@ const routes = [
         path:'rcharge',
         component:returnCharge
       }
-    ]
+    ],
+    // path:'/OutPatient/login',
+    path:'/Drug/login',
+    name:'login',
+    // component:OutPatientLogin
+    component:DrugLogin
+  },{
+    // path:'/OutPatient/index',
+    path:'/Drug/index',
+    name:'index',
+    component:DrugIndex
   }
 ]
 
