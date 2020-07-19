@@ -10,12 +10,15 @@ Vue.use(VueRouter)
 import OutPatientRegister from 'views/OutPatientRegister.vue'
 import OutPatientLogin from 'views/OutPatientLogin.vue'
 import OutPatientIndex from 'views/OutPatientIndex.vue'
+import DrugLogin from "../views/DrugLogin";
+import DrugIndex from "../views/DrugIndex";
 
 const routes = [
   {
     path:'/',
     name:'home',
-    redirect:'/OutPatient/login'
+    // redirect:'/OutPatient/login'
+    redirect:'/Drug/login'
   },
   {
     path:'/OutPatient/register',
@@ -23,13 +26,16 @@ const routes = [
     component:OutPatientRegister
   },
   {
-    path:'/OutPatient/login',
+    // path:'/OutPatient/login',
+    path:'/Drug/login',
     name:'login',
-    component:OutPatientLogin
+    // component:OutPatientLogin
+    component:DrugLogin
   },{
-    path:'/OutPatient/index',
+    // path:'/OutPatient/index',
+    path:'/Drug/index',
     name:'index',
-    component:OutPatientIndex
+    component:DrugIndex
   }
 ]
 
