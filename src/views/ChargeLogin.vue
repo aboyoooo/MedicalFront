@@ -83,7 +83,7 @@ export default {
                         }else{
                             //登录失败
                             this.$message({
-                                message: '登录失败,卡号错误',
+                                message: '登录失败,密码或者用户名错误',
                                 type: 'error'
                             });
                         }

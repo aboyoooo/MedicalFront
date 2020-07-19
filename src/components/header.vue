@@ -11,7 +11,7 @@
                         <i class="el-icon-arrow-down el-icon--right"></i>
                     </span>
                     <el-dropdown-menu slot="dropdown">
-                        <el-dropdown-item command="quitNumber">退号</el-dropdown-item>
+                        <el-dropdown-item command="quitNumber" v-if="pa=='patient'">退号</el-dropdown-item>
                         <el-dropdown-item command="quit">退出</el-dropdown-item>
                     </el-dropdown-menu>
                 </el-dropdown>
@@ -29,7 +29,8 @@ export default {
         }
     },
     props:[
-        'title'
+        'title',
+        'pa'
     ],
     methods:{
         quit(command){

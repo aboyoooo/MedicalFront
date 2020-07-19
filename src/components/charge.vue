@@ -143,7 +143,8 @@ export default {
                 nums:'',
                 index:'',
                 row:''
-            }
+            },
+            amount:0
         }
     },
     mounted(){
@@ -179,6 +180,7 @@ export default {
         var that = this;
         //删除table中的数据
         that.drugData.splice(index,1);
+        that.setAmount();
       },
       editSub(){
           var that = this;
@@ -188,6 +190,7 @@ export default {
           that.drugData[that.editForm.index].nums = that.editForm.nums;
           that.drugData[that.editForm.index].amount = 
           Number.parseInt(that.editForm.nums)*Number.parseInt(that.drugData[that.editForm.index].unitPrice);
+          that.setAmount();
       },
       searchPatient(){
           var that = this;
@@ -215,6 +218,11 @@ export default {
                 if(res.code==20000 && res.flag==true){
                     var data = res.data;
                     that.tableData.push(data);
+                    if(data.patientFeature=="医保"){
+                        that.$emit('percent',0.7);
+                    }else{
+                        that.$emit('percent',1.0);
+                    }
                     //构造请求的url查询 患者药方信息
                     var ul = "http://localhost:8003/out/api/PatientDrugs/"+data.outpatientId;
                     that.$axios.get(ul,{
@@ -227,10 +235,13 @@ export default {
                         if(response.code==20000 && response.flag==true){
                             var data = response.data;
                             //将获取的处方单号存储为全局变量
-                            that.mListId = data[0].mlistId;
-                            for(var i=0;i<data.length;i++){
-                                that.drugData.push(data[i]);
+                            if(data.length>0){
+                                that.mListId = data[0].mlistId;
+                                for(var i=0;i<data.length;i++){
+                                    that.drugData.push(data[i]);
+                                }
                             }
+                            that.setAmount();
                             that.loading = false;
                             this.$message({
                                 message: '查询成功',
@@ -253,6 +264,73 @@ export default {
                 }
             });
           }
+      },
+      setAmount(){
+          var that = this;
+          //遍历
+          var sum = 0;
+          for(var i=0;i<that.drugData.length;i++){
+              sum+=that.drugData[i].amount;
+          }
+          that.amount = sum;
+          that.$emit('amount',sum);
+      },
+      ensureGetPaid(){
+          var that = this;
+          //构造请求的url
+          var url = "http://localhost:8003/out/api/records";
+          //构造发送的数据
+          var data = [];
+          for(var i=0;i<that.drugData.length;i++){
+              var tmp = {
+                  "medicalListId":that.drugData[i].mlistId,
+                  "drugId":that.drugData[i].drugId,
+                  "payCount":that.drugData[i].nums,
+                  "payStatus":"2"
+              };
+              data.push(tmp);
+          }
+          that.$axios.put(url,data,{
+              headers:{
+                'content-type':'application/json',
+                'access_token':that.token
+              }
+          }).then((res)=>{
+              res = res.data;
+              if(res.code==20000 && res.flag==true){
+                  this.$message({
+                    message: '收款成功',
+                    type: 'success'
+                  });
+                  //在localstorage里存入 用户相关信息
+                  var userInfo = localStorage.getItem('userInfo');
+                  if(userInfo==null || userInfo==undefined){
+                      var data = [];
+                      var tp = {
+                          'userId':that.tableData[0].patientId,
+                          'userInfo':that.tableData,
+                          'drugData':that.drugData
+                      };
+                      data.push(tp);
+                      var dt = {"data":data};
+                      localStorage.setItem('userInfo',JSON.stringify(dt));
+                  }else{
+                      var tp = {
+                          'userId':that.tableData[0].patientId,
+                          'userInfo':that.tableData,
+                          'drugData':that.drugData
+                      };
+                      userInfo.data.push(tp);
+                      localStorage.setItem('userInfo',JSON.stringify(userInfo));
+                  }
+
+              }else{
+                  this.$message({
+                    message: '收款失败',
+                    type: 'error'
+                  });
+              }
+          });
       }
     }
 }
@@ -270,7 +348,6 @@ export default {
     }
 
     .main-card{
-        margin-top:20px;
         padding:20px;
         border-radius: 2px;
     }

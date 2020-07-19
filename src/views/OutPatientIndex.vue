@@ -1,6 +1,6 @@
 <template>
     <div class="main">
-        <heads :title="title" class="my-head"  @quitNumber="getQuitNumberFlag"></heads>
+        <heads :title="title" class="my-head"  @quitNumber="getQuitNumberFlag" :pa="pa"></heads>
         <outpatientContainer class="my-container" @finalFee="getFees" @canUse="getDisabled" ref="child"></outpatientContainer>
         <settlement class="my-settle" :finalFee="allFees" :canUse="isDisabled" @gua="getFlag"></settlement>
         <el-dialog title="提示" :visible.sync="quitNumberFlag" width="60%">
@@ -55,7 +55,8 @@ export default {
             allFees:'0',
             isDisabled:true,
             quitNumberFlag:false,
-            outpatientData:[]
+            outpatientData:[],
+            pa:'patient'
         }
     },
     created(){
