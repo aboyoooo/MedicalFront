@@ -11,11 +11,11 @@
                     <h1>医师发药系统</h1>
                 </el-col>
             </el-row>
-            <el-row>
+            <!-- <el-row>
                 <el-col :span="24" class="tips">
                     <span>请输入员工账号：</span>
                 </el-col>
-            </el-row>
+            </el-row> -->
             <el-form ref="form" :model="form" :rules="rules" @submit.native.prevent>
 <!--                账号-->
                 <el-row>

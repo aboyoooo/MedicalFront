@@ -286,7 +286,7 @@ export default {
                   "medicalListId":that.drugData[i].mlistId,
                   "drugId":that.drugData[i].drugId,
                   "payCount":that.drugData[i].nums,
-                  "payStatus":"2"
+                  "payStatus":"1"
               };
               data.push(tmp);
           }

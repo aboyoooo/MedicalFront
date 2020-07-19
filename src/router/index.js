@@ -22,8 +22,7 @@ const routes = [
   {
     path:'/',
     name:'home',
-    // redirect:'/OutPatient/login'
-    redirect:'/Drug/login'
+    redirect:'/OutPatient/login'
   },
   {
     path:'/OutPatient/register',
@@ -60,7 +59,9 @@ const routes = [
         path:'rcharge',
         component:returnCharge
       }
-    ],
+    ]
+  },
+  {
     // path:'/OutPatient/login',
     path:'/Drug/login',
     name:'login',
