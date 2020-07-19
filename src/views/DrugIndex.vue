@@ -1,6 +1,6 @@
 <template>
     <div class="main">
-        <heads></heads>
+        <heads :title="title" :pa="pa"></heads>
         <div class="container">
             <el-row>
                 <el-col :span="22" :offset="1" class="my-row">
@@ -148,7 +148,7 @@
 </template>
 
 <script>
-    import heads from 'components/drugHeader.vue'
+    import heads from 'components/header.vue'
     import Bus from '../assets/js/bus'
 
     export default {
@@ -165,8 +165,10 @@
                     name: '',
                     age: '',
                     sex: '',
-                    patientId: ''
+                    patientId: '',
                 },
+                title:'药房发药系统',
+                pa:'drug',
                 //    处方单表用--开始   固定数据
                 // tableData: [{
                     //name
